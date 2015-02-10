@@ -8,6 +8,20 @@ class Player(object):
         self.disconnected = None
         self.kills = []
         self.deaths = []
+        
+    def killed(self, victim):
+        self.kills += [victim]
+        
+    def died(self, time):
+        self.deaths += [time]
+        
+    def dict(self):
+        return {'id':self.id,
+                'name':self.name,
+                'connected':self.connected,
+                'disconnected':self.disconnected,
+                'kills':[x.id for x in self.kills],
+                'deaths':self.deaths}
 
 def main():
     
@@ -20,12 +34,20 @@ def main():
         connect_line = regex_parse.connect_c.search(l)
         disconnect_line = regex_parse.disconnect_c.search(l)
         if kill_line:
+            killed_name = kill_line.group(2)
+            killed_id = kill_line.group(3)
             
-            if kill_line.group(3) not in players:
-                players[kill_line.group(3)] = Player(kill_line.group(2),kill_line.group(3))
+            if killed_id not in players:
+                players[killed_id] = Player(killed_name,killed_id)
                 
-            if kill_line.group(5) not in players:
-                players[kill_line.group(5)] = Player(kill_line.group(4),kill_line.group(5))
+            killer_name = kill_line.group(4)
+            killer_id = kill_line.group(5)
+            
+            if killer_id not in players:
+                players[killer_id] = Player(killer_name,killer_id)
+            
+            players[killer_id].killed(players[killed_id])
+            players[killed_id].died(kill_line.group(1))
             
             kill_line = None
             
@@ -43,7 +65,8 @@ def main():
                 
             disconnect_line = None
             
-    print players
+    for p in players:
+        print players[p].dict()
 
 if __name__ == "__main__":
     main()
