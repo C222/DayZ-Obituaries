@@ -1,0 +1,21 @@
+18:51:42 | Player "A"(id=76561198068665116) has been killed by player "B"(id=76561198119732888)
+18:52:00 | Player "C"(id=76561198037910139) has been disconnected
+18:52:03 | Player "D" is connected (id=76561198107451732)
+18:52:07 | Chat("E"(id=76561198068196739)): k
+18:52:46 | Player "F"(id=76561198156330659) has been disconnected
+18:52:48 | Player "G"(id=76561198125239111) has been disconnected
+18:52:55 | Player "H" is connected (id=76561198147761642)
+18:53:32 | Player "I"(id=76561198044084635) has been disconnected
+18:53:35 | Player "J"(id=76561198070510882) has been killed by player "K"(id=76561197982672292)
+18:53:54 | Player "L" is connected (id=76561198018833551)
+18:54:02 | Player "M"(id=76561198074269851) has been killed by player "E"(id=76561198068196739)
+18:54:30 | Player "N"(id=76561198064120522) has been disconnected
+18:54:39 | Player "O"(id=76561198126232860) has been disconnected
+18:55:16 | Player "P" is connected (id=76561198136867813)
+18:55:21 | Chat("Q"(id=76561198170094390)): hi
+18:55:22 | Player "R"(id=76561198091758275) has been disconnected
+18:55:29 | Player "S"(id=76561198045060285) has been killed by player "D"(id=76561198107451732)
+18:55:30 | Player "T" is connected (id=76561197988169160)
+18:55:48 | Player "U" is connected (id=76561198099237724)
+18:55:51 | Chat("Q"(id=76561198170094390)): thx bro
+18:55:52 | Player "K"(id=76561197982672292) has been disconnected
