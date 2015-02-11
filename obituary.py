@@ -37,7 +37,12 @@ def main():
     
     players = {}
     
-    log_f = open("./log_example.txt","r")
+    file_name = "DayZServer_39007.ADM"
+    
+    try:
+        log_f = open(file_name)
+    except:
+        log_f = open("./log_example.txt","r")
     
     for l in log_f.readlines():
         kill_line = regex_parse.kill_c.search(l)
@@ -79,7 +84,7 @@ def main():
             
             disconnect_line = None
             
-    lv = LogViz(players, True, engine='fdp')
+    lv = LogViz(players, False, engine='fdp')
     print lv.graph.source
     print lv.graph.render()
 
