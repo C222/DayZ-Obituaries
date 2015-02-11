@@ -2,4 +2,4 @@
 
 # Example:
 
-![Example](http://i.imgur.com/1D9Vpyd.png)
+![Example](http://i.imgur.com/C1iW1HX.png)
