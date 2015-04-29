@@ -1,6 +1,7 @@
 import regex_parse
 import graphviz
 import argparse
+import time
 
 parser = argparse.ArgumentParser()
 parser.add_argument("filename", help="Input file name")
@@ -14,15 +15,20 @@ class LogViz(object):
 	def __init__(self, playerdict, everyone = False, engine = 'dot', label = "Graph", filename="out"):
 		self.graph = graphviz.Digraph(comment=label, format=args.format, engine=engine, filename = filename+".gv")
 		self.graph.body.append('label="'+label+'"')
+		self.graph.body.append('bgcolor="black"')
+		self.graph.body.append('fontcolor="darkgreen"')
+		# self.graph.body.append('size="16,9"')
 		for p in playerdict:
 			if playerdict[p].kills or playerdict[p].deaths or everyone:
-				self.graph.node(p, playerdict[p].name)
+				self.graph.node(p, "\n".join(playerdict[p].aliases), style="filled", fillcolor="gray10", color="darkgreen", fontcolor="darkgreen")
 				for k in playerdict[p].kills:
-					self.graph.edge(p, k[0].id, xlabel=k[1], fontcolor="red")
+					x = self.graph.edge(p, k[0].id, label=k[1], fontcolor="green", fontsize="8", color="darkgreen")
 
 class Player(object):
 	def __init__(self, name, id):
 		self.name = name.strip('"')
+		self.aliases = set()
+		self.aka(name)
 		self.id = id
 		self.connected = []
 		self.disconnected = []
@@ -34,6 +40,9 @@ class Player(object):
 		
 	def died(self, time):
 		self.deaths += [time]
+		
+	def aka(self, name):
+		self.aliases.add(name.strip('"'))
 		
 	def dict(self):
 		return {'id':self.id,
@@ -64,6 +73,7 @@ def main():
 	for d in dayz_days:
 		label = file_name
 		players = {}
+		curr_day = ""
 		for l in d.split("\n"):
 			kill_line = regex_parse.kill_c.search(l)
 			connect_line = regex_parse.connect_c.search(l)
@@ -71,7 +81,7 @@ def main():
 			day_line = regex_parse.day_c.search(l)
 			if kill_line:
 				
-				time = kill_line.group(1)
+				ts = time.strptime(curr_day+" "+kill_line.group(1),"%Y-%m-%d %H:%M:%S")
 				killed_name = kill_line.group(2)
 				killed_id = kill_line.group(3)
 				
@@ -84,8 +94,11 @@ def main():
 				if killer_id not in players:
 					players[killer_id] = Player(killer_name,killer_id)
 				
-				players[killer_id].killed(players[killed_id], time)
-				players[killed_id].died(kill_line.group(1))
+				players[killer_id].killed(players[killed_id], time.strftime("%d %b %Y\n%H:%M:%S", ts))
+				players[killed_id].died(time.strftime("%d %b %Y\n%H:%M:%S", ts))
+				
+				players[killer_id].aka(killer_name)
+				players[killed_id].aka(killed_name)
 				
 				kill_line = None
 				
@@ -95,6 +108,7 @@ def main():
 					players[connect_line.group(3)] = Player(connect_line.group(2),connect_line.group(3))
 				
 				players[connect_line.group(3)].connected += [connect_line.group(1)]
+				players[connect_line.group(3)].aka(connect_line.group(2))
 				
 				connect_line = None
 				
@@ -104,17 +118,21 @@ def main():
 					players[disconnect_line.group(3)] = Player(disconnect_line.group(2),disconnect_line.group(3))
 				
 				players[disconnect_line.group(3)].disconnected += [disconnect_line.group(1)]
+				players[disconnect_line.group(3)].aka(disconnect_line.group(2))
 				
 				disconnect_line = None
 				
 			if day_line:
+				curr_day = day_line.group(1)
 				label += " " + day_line.group(1) + " " + day_line.group(2)
 				print label
 				
 		if players:
 			if not split_days:
-				label = file_name
-			lv = LogViz(players, everyone, engine=args.engine, label = label, filename = label.replace('-','').replace(':','').replace(' ',''))
+				label = file_name.replace(".ADM","")
+				lv = LogViz(players, everyone, engine=args.engine, label = label, filename = label.replace('-','').replace(':','').replace(' ',''))
+			else:
+				lv = LogViz(players, everyone, engine=args.engine, label = label, filename = "Gallery/"+label.replace('-','').replace(':','').replace(' ',''))
 			# print lv.graph.source
 			lv.graph.render()
 
