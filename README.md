@@ -1,3 +1,3 @@
 # DayZ-Obituaries
 
-This is currently a tool for internal use only. Do not share the output of this tool.
+This is a tool to help DayZ server admins enforce server rules and protect against cheating.
