@@ -42,7 +42,7 @@ class Player(object):
 		self.deaths += [time]
 		
 	def aka(self, name):
-		self.aliases.add(name.strip('"'))
+		self.aliases.add(name.decode('utf-8').strip('"'))
 		
 	def dict(self):
 		return {'id':self.id,
